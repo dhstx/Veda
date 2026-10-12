@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "demo-void",
+  "title": "The Void \u00B7 Synthetic demo",
+  "tempoBpm": 96,
+  "beatsPerBar": 4,
+  "loopBars": 4,
+  "sampleRate": 48000,
+  "channels": 2,
+  "layers": [
+    {
+      "id": "atmosphere",
+      "file": "atmosphere.wav"
+    },
+    {
+      "id": "pulse",
+      "file": "pulse.wav"
+    },
+    {
+      "id": "tension",
+      "file": "tension.wav"
+    },
+    {
+      "id": "combat",
+      "file": "combat.wav"
+    },
+    {
+      "id": "escape",
+      "file": "escape.wav"
+    },
+    {
+      "id": "relief",
+      "file": "relief.wav"
+    }
+  ],
+  "states": {
+    "CalmSpace": {
+      "atmosphere": 0.75,
+      "pulse": 0,
+      "tension": 0,
+      "combat": 0,
+      "escape": 0,
+      "relief": 0
+    },
+    "Travel": {
+      "atmosphere": 0.7,
+      "pulse": 0.32,
+      "tension": 0,
+      "combat": 0,
+      "escape": 0.15,
+      "relief": 0
+    },
+    "Uncertain": {
+      "atmosphere": 0.65,
+      "pulse": 0.22,
+      "tension": 0.5,
+      "combat": 0,
+      "escape": 0,
+      "relief": 0
+    },
+    "Combat": {
+      "atmosphere": 0.3,
+      "pulse": 0.3,
+      "tension": 0.38,
+      "combat": 0.8,
+      "escape": 0,
+      "relief": 0
+    },
+    "Escape": {
+      "atmosphere": 0.45,
+      "pulse": 0.55,
+      "tension": 0.16,
+      "combat": 0.25,
+      "escape": 0.6,
+      "relief": 0
+    },
+    "Relief": {
+      "atmosphere": 0.65,
+      "pulse": 0.08,
+      "tension": 0,
+      "combat": 0,
+      "escape": 0.12,
+      "relief": 0.55
+    }
+  }
+}

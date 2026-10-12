@@ -1,0 +1,121 @@
+<Window
+    x:Class="Veda.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid x:Name="Root" Background="#10161D" RequestedTheme="Dark" Loaded="OnLoaded" KeyDown="OnKeyDown">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <StackPanel Padding="36" Spacing="24" MaxWidth="860" HorizontalAlignment="Stretch">
+        <StackPanel Spacing="8">
+          <TextBlock Text="VEDA" CharacterSpacing="200" Foreground="{StaticResource ScoreAccent}" FontSize="13" />
+          <TextBlock Text="A soundtrack that follows the moment." FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" />
+          <TextBlock Text="Prototype 0.2.0 · Manual music test · No gameplay detection" Foreground="#A5B1BF" TextWrapping="Wrap" />
+        </StackPanel>
+        <Border BorderBrush="#2D3A48" BorderThickness="0,1,0,1" Padding="0,24">
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <StackPanel Spacing="8">
+              <TextBlock Text="Current situation." Foreground="#A5B1BF" />
+              <TextBlock x:Name="StateText" Text="Calm space" FontSize="36" FontWeight="SemiBold" />
+              <TextBlock x:Name="TransitionText" Text="Load a soundtrack to begin." Foreground="#A5B1BF" TextWrapping="Wrap" />
+            </StackPanel>
+            <Button x:Name="PlayButton" Grid.Column="1" Content="Play" IsEnabled="False" Click="OnPlayClicked" VerticalAlignment="Center" Margin="20,0,0,0" AutomationProperties.Name="Play or pause the soundtrack" />
+          </Grid>
+        </Border>
+        <Grid ColumnSpacing="24">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <StackPanel Spacing="6">
+            <TextBlock Text="Soundtrack." FontSize="18" FontWeight="SemiBold" />
+            <TextBlock x:Name="PackText" Text="Loading demo score…" TextWrapping="Wrap" />
+            <TextBlock x:Name="PackDetailText" Foreground="#A5B1BF" FontSize="12" TextWrapping="Wrap" />
+            <TextBlock Text="Choose VedaMusic, with genre folders containing situation folders and songs." Foreground="#A5B1BF" FontSize="12" TextWrapping="Wrap" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Center">
+            <Button x:Name="LoadSongsButton" Content="Load song library" Click="OnLoadSongsClicked" AutomationProperties.Name="Load full songs organized by genre and situation" />
+          </StackPanel>
+        </Grid>
+        <StackPanel x:Name="SongControls" Visibility="Collapsed" Spacing="12">
+          <TextBlock Text="Music selections." FontSize="18" FontWeight="SemiBold" />
+          <ComboBox x:Name="GenreBox" Header="Playback genre" SelectionChanged="OnGenreChanged" HorizontalAlignment="Stretch" />
+          <ComboBox x:Name="SituationBox" Header="Playback situation" DisplayMemberPath="Name" SelectionChanged="OnSituationChanged" HorizontalAlignment="Stretch" />
+          <ComboBox x:Name="EntryBox" Header="Entry for the next track" SelectedIndex="0" SelectionChanged="OnEntryChanged" HorizontalAlignment="Stretch">
+            <ComboBoxItem Content="Automatic cue for the situation" />
+            <ComboBoxItem Content="Beginning" />
+            <ComboBoxItem Content="Quieter section" />
+            <ComboBoxItem Content="Stronger section" />
+          </ComboBox>
+          <CheckBox x:Name="QuietBox" Content="Allow 20-second quiet breaks after calm or relief" IsChecked="True" Checked="OnQuietChanged" Unchecked="OnQuietChanged" />
+          <Button x:Name="NextTrackButton" Content="Next track / End quiet break" Click="OnNextTrackClicked" />
+          <TextBlock Text="Cue points use audio energy estimates. Listen and adjust them; they are not AI judgments or verified musical boundaries." Foreground="#A5B1BF" FontSize="12" TextWrapping="Wrap" />
+        </StackPanel>
+        <StackPanel Spacing="14">
+          <Grid ColumnSpacing="28">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel Spacing="6">
+              <TextBlock Text="Crossfade" />
+              <Slider x:Name="CrossfadeSlider" IsEnabled="False" Minimum="0" Maximum="20" Value="8" StepFrequency="1" ValueChanged="OnCrossfadeChanged" AutomationProperties.Name="Crossfade in seconds; zero plays the full song before the next starts" />
+              <TextBlock x:Name="CrossfadeText" Text="8 seconds · 0 = full song, then next" Foreground="#A5B1BF" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Spacing="6">
+              <TextBlock Text="Responsiveness" />
+              <Slider x:Name="ResponseSlider" IsEnabled="False" Minimum="0" Maximum="100" Value="50" StepFrequency="1" ValueChanged="OnArrangementChanged" AutomationProperties.Name="Responsiveness: gradual to reactive" />
+              <TextBlock Text="Gradual → Reactive" Foreground="#A5B1BF" FontSize="12" />
+            </StackPanel>
+          </Grid>
+          <StackPanel Spacing="6">
+            <TextBlock Text="Volume" />
+            <Slider x:Name="VolumeSlider" IsEnabled="False" Minimum="0" Maximum="100" Value="50" StepFrequency="1" ValueChanged="OnVolumeChanged" AutomationProperties.Name="Soundtrack volume" />
+          </StackPanel>
+        </StackPanel>
+        <Expander x:Name="LibraryManager" Header="Manage music, genres, and situations." HorizontalAlignment="Stretch" IsExpanded="False">
+          <StackPanel Spacing="12" HorizontalAlignment="Stretch">
+            <TextBlock Text="Defaults are protected. Custom items can be removed. Song choices and crossfade settings are saved in your music folder." TextWrapping="Wrap" Foreground="#A5B1BF" />
+            <StackPanel Orientation="Horizontal" Spacing="20">
+              <CheckBox x:Name="DefaultSongsBox" Content="Include Default songs" IsChecked="True" Checked="OnSourcesChanged" Unchecked="OnSourcesChanged" />
+              <CheckBox x:Name="CustomSongsBox" Content="Include Custom songs" IsChecked="True" Checked="OnSourcesChanged" Unchecked="OnSourcesChanged" />
+            </StackPanel>
+            <ComboBox x:Name="ManageGenreBox" Header="Genre to manage" DisplayMemberPath="Label" HorizontalAlignment="Stretch" SelectionChanged="OnManageSelectionChanged" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBox x:Name="NewGenreName" PlaceholderText="New genre name, e.g. Industrial" MaxLength="80" Width="350" />
+              <Button x:Name="AddGenreButton" Content="Add genre" Click="OnAddGenreClicked" />
+              <Button x:Name="RemoveGenreButton" Content="Remove custom genre" Click="OnRemoveGenreClicked" />
+            </StackPanel>
+            <ComboBox x:Name="ManageSituationBox" Header="Situation to manage" DisplayMemberPath="Label" HorizontalAlignment="Stretch" SelectionChanged="OnManageSelectionChanged" />
+            <TextBlock x:Name="SituationDescriptionText" TextWrapping="Wrap" Foreground="#A5B1BF" />
+            <TextBox x:Name="NewSituationName" Header="New situation name" PlaceholderText="Near a blue star" MaxLength="80" />
+            <TextBox x:Name="NewSituationDescription" Header="Describe when this situation applies" PlaceholderText="Whenever it is evident that I am near a blue star." MaxLength="600" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Button x:Name="AddSituationButton" Content="Add situation" Click="OnAddSituationClicked" />
+              <Button x:Name="RemoveSituationButton" Content="Remove custom situation" Click="OnRemoveSituationClicked" />
+            </StackPanel>
+            <TextBlock Text="Custom imports: WAV only, up to 4:00. Stereo 48 kHz, 16-bit PCM or 32-bit float WAV. Veda checks each file and copies accepted songs; your originals stay untouched." TextWrapping="Wrap" Foreground="#A5B1BF" />
+            <Button x:Name="AddSongsButton" Content="Add WAV songs from device…" Click="OnAddSongsClicked" />
+            <TextBlock Text="Songs in the selected genre and situation. Each song has its own on/off checkbox." TextWrapping="Wrap" />
+            <StackPanel x:Name="SongRows" Spacing="8" />
+            <TextBlock x:Name="ManagerStatusText" Text="Load VedaMusic to manage your library." TextWrapping="Wrap" Foreground="#A5B1BF" />
+          </StackPanel>
+        </Expander>
+        <StackPanel Spacing="12">
+          <TextBlock Text="Manual controls." FontSize="18" FontWeight="SemiBold" />
+          <TextBlock Text="Use the buttons or keys 1–6 while this window has focus." Foreground="#A5B1BF" TextWrapping="Wrap" />
+          <Grid x:Name="ManualButtons" ColumnSpacing="10" RowSpacing="10">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <Button Tag="CalmSpace" IsEnabled="False" Content="1 · Calm space" Click="OnStateClicked" HorizontalAlignment="Stretch" />
+            <Button Grid.Column="1" Tag="Travel" IsEnabled="False" Content="2 · Travel" Click="OnStateClicked" HorizontalAlignment="Stretch" />
+            <Button Grid.Column="2" Tag="Uncertain" IsEnabled="False" Content="3 · Uncertain" Click="OnStateClicked" HorizontalAlignment="Stretch" />
+            <Button Grid.Row="1" Tag="Combat" IsEnabled="False" Content="4 · Combat" Click="OnStateClicked" HorizontalAlignment="Stretch" />
+            <Button Grid.Row="1" Grid.Column="1" Tag="Escape" IsEnabled="False" Content="5 · Escape" Click="OnStateClicked" HorizontalAlignment="Stretch" />
+            <Button Grid.Row="1" Grid.Column="2" Tag="Relief" IsEnabled="False" Content="6 · Relief" Click="OnStateClicked" HorizontalAlignment="Stretch" />
+          </Grid>
+        </StackPanel>
+        <Border BorderBrush="#2D3A48" BorderThickness="0,1,0,0" Padding="0,16,0,0">
+          <StackPanel Spacing="6">
+            <ToggleSwitch x:Name="ObservationToggle" Header="Gameplay observation mode" OffContent="Off" OnContent="Requested" Toggled="OnObservationToggled" />
+            <TextBlock x:Name="ObservationStatusText" Text="Disconnected · Gameplay AI is not connected yet. No screen capture is running." Foreground="#A5B1BF" TextWrapping="Wrap" />
+            <TextBlock x:Name="StatusText" Text="No game connection is required for this prototype." Foreground="#A5B1BF" FontSize="12" TextWrapping="Wrap" />
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Window>

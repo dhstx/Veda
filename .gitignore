@@ -1,0 +1,42 @@
+# Build and IDE outputs
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+artifacts/
+TestResults/
+
+# Private settings and credentials
+.env
+.env.*
+!.env.example
+*.pfx
+*.key
+secrets.json
+appsettings.Local.json
+
+# Personal soundtracks and capture/model datasets
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.m4a
+*.mp4
+*.webm
+*.onnx
+datasets/
+captures/
+assets/soundtracks/private/
+
+# The original synthetic demo is part of this starter
+!assets/soundtracks/demo-void/*.wav
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# User music catalog and metadata (normally outside the source repository).
+veda-library.json
+veda-library.json.tmp

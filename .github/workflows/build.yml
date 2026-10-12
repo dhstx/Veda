@@ -1,0 +1,30 @@
+name: Build and verify
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  portable-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Run soundtrack and mixer checks
+        run: dotnet run --project tests/Veda.Checks -c Release -- assets/soundtracks/demo-void
+      - name: Compile Windows audio adapter
+        run: dotnet build src/Veda.Audio.Windows/Veda.Audio.Windows.csproj -c Release
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Run portable checks on Windows
+        run: dotnet run --project tests/Veda.Checks -c Release -- assets/soundtracks/demo-void
+      - name: Compile WinUI application
+        run: dotnet build src/Veda.App/Veda.App.csproj -c Release -p:Platform=x64
